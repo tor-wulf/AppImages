@@ -1,3 +1,9 @@
+#!/bin/bash
+
+set -e
+set -x
+
+cpus=$(grep processor /proc/partitions | wc -l)
 ########################################################################
 # TODO:
 # j-b on #videolan:
@@ -39,7 +45,7 @@ wget -c -T 10 ftp://ftp.gnu.org/gnu/gettext/gettext-0.19.6.tar.gz
 tar xvf gettext-0.19.6.tar.gz
 cd gettext-0.19.6
 ./configure --prefix=/usr --libdir=/usr/lib64
-make -j 16 && make install
+make -j $cpus && make install
 
 # Workaround for:
 # configure: error: No package 'alsa' found. alsa-lib 1.0.24 or later required.
@@ -50,14 +56,14 @@ wget -c -T 10 ftp://ftp.alsa-project.org/pub/lib/alsa-lib-1.0.24.1.tar.bz2
 tar xvf alsa-lib-1.0.24.1.tar.bz2
 cd alsa-lib-1.0.24.1
 ./configure --prefix=/usr --libdir=/usr/lib64
-make -j 16 && make install
+make -j $cpus && make install
 
 ########################################################################
 # Get VLC
 ########################################################################
 
 cd /
-git clone git://git.videolan.org/vlc.git --depth 1
+git clone http://git.videolan.org/vlc.git
 cd vlc
 
 ########################################################################
@@ -75,7 +81,7 @@ export PATH=/vlc/extras/tools/build/bin:$PATH
 export LD_LIBRARY_PATH=/vlc/extras/tools/build/bin:$LD_LIBRARY_PATH
 cd extras/tools/
 ./bootstrap
-make -j 16
+make -j $cpus
 # make
 # Why do I have to run make repeatedly on Trusty but not on Precise or Xenial?
 
@@ -165,7 +171,7 @@ export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/:/usr/share/pkgconfig
 # "vlc aliases : cvlc rvlc qvlc svlc"
 # Don't proceed if qvlc is not listed.
 
-make -j 16
+make -j $cpus
 
 # Workaround for:
 # CCLD libvlccore.la
@@ -245,7 +251,7 @@ chmod a+x /usr/bin/g++
 # Rebuild libz with (this worked; hopefully the CFLAGS=-fPIC above makes this unneccessary) :
 # cd /vlc/contrib/native/zlib
 # CFLAGS=-fPIC ./configure
-# make -j 16
+# make -j $cpus
 # make install
 # cp /usr/local/lib/libz.* /vlc/contrib/x86_64-linux-gnu/lib/
 # cd -
@@ -271,7 +277,7 @@ export PATH=/vlc/extras/tools/build/bin/:$PATH
 
 BUILDCC="/usr/bin/gcc -std=gnu99" ./configure --enable-pulse --disable-chromaprint --disable-ncurses --disable-cddb --prefix=/usr
 
-make -j 16
+make -j $cpus
 
 APP=VLC
 make install DESTDIR=/$APP/$APP.AppDir
