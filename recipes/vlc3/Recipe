@@ -41,9 +41,9 @@ sudo apt-get -y install git build-essential pkg-config autoconf libxcb-shm0-dev 
 # Getting warning about outdated gettext
 # Update gettext to 0.19.6
 cd /usr/src
-wget -c -T 10 ftp://ftp.gnu.org/gnu/gettext/gettext-0.19.6.tar.gz
-tar xvf gettext-0.19.6.tar.gz
-cd gettext-0.19.6
+wget -c -T 10 ftp://ftp.gnu.org/gnu/gettext/gettext-0.19.8.1.tar.gz
+tar xvf gettext-0.19.8.1.tar.gz
+cd gettext-0.19.8.1
 ./configure --prefix=/usr --libdir=/usr/lib64
 make -j $cpus && make install
 
